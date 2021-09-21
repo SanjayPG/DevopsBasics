@@ -54,6 +54,6 @@ stages:
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
-        buildContext: $(Build.SourcesDirectory)/webapp
+        buildContext: $(Build.SourcesDirectory)
         tags: |
           $(tag)
