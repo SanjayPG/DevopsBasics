@@ -14,7 +14,7 @@ variables:
   dockerRegistryServiceConnection: 'f8013ad5-4283-4145-8b60-3aa8e6e65e16'
   imageRepository: 'sanjaypgdevopsbasics'
   containerRegistry: 'mycontainerregistrory.azurecr.io'
-  dockerfilePath: '**/Dockerfile'
+  dockerfilePath: '**/AzureDockerfile'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'mycontainerregistrory218293b4-auth'
 
@@ -58,7 +58,7 @@ stages:
         dockerfile: $(dockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
         buildContext: $(Build.SourcesDirectory)
-        tags: |
+        tags: 
           $(tag)
 
     - upload: manifests
