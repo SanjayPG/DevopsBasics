@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: sanjaypgdevopsbasics 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sanjaypgdevopsbasics
+  template:
+    metadata:
+      labels:
+        app: sanjaypgdevopsbasics 
+    spec:
+      containers:
+        - name: sanjaypgdevopsbasics 
+          image: mycontainerregistrory.azurecr.io/sanjaypgdevopsbasics
+          ports:
+          - containerPort: 80
