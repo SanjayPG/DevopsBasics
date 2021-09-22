@@ -1,0 +1,64 @@
+# Docker
+# Build and push an image to Azure Container Registry
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- master
+
+resources:
+- repo: self
+
+variables:
+  # Container registry service connection established during pipeline creation
+  dockerRegistryServiceConnection: '073d7f16-d1e6-48b4-86d9-2c7e1ea5bd61'
+  imageRepository: 'sanjaypgdevopsbasics'
+  containerRegistry: 'mycontainerregistrory.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)/AzureDockerfile'
+  tag: '$(Build.BuildId)'
+
+  # Agent VM image name
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+  jobs:
+  - job: Build
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - task: Maven@3
+      inputs:
+        mavenPomFile: 'pom.xml'
+        mavenOptions: '-Xmx3072m'
+        javaHomeOption: 'JDKVersion'
+        jdkVersionOption: '1.8'
+        jdkArchitectureOption: 'x64'
+        publishJUnitResults: true
+        testResultsFiles: '**/surefire-reports/TEST-*.xml'
+        goals: 'package'
+    - task: CopyFiles@2
+      inputs:
+        Contents: '**/*.war'
+        TargetFolder: '$(build.artifactstagingdirectory)'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'warfile'
+        publishLocation: 'Container'
+    - task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        buildContext: $(Build.SourcesDirectory)
+        tags: |
+          $(tag)
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)/manifests'
+        ArtifactName: 'deployment file'
+        publishLocation: 'Container'
