@@ -57,8 +57,3 @@ stages:
         buildContext: $(Build.SourcesDirectory)
         tags: |
           $(tag)
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/manifests'
-        ArtifactName: 'deployment file'
-        publishLocation: 'Container'
