@@ -40,7 +40,7 @@ stages:
         goals: 'package'
     - task: CopyFiles@2
       inputs:
-        Contents: '**/*.yaml'
+        Contents: '**/*.yml'
         TargetFolder: '$(build.artifactstagingdirectory)'
     - task: PublishBuildArtifacts@1
       inputs:
